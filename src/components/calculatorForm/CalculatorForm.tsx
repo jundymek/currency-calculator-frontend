@@ -21,7 +21,11 @@ const CalculatorForm = React.memo(() => {
   useEffect(() => {
     async function fetchData() {
       const data = await getCurrences();
-      setCurrences(data);
+      setCurrences(
+        data.sort((a: any, b: any) => {
+          return a.symbol > b.symbol ? 1 : b.symbol > a.symbol ? -1 : 0;
+        })
+      );
     }
     fetchData();
   }, []);
@@ -34,10 +38,13 @@ const CalculatorForm = React.memo(() => {
           <div>
             <label>Mam walutę</label>
             <Field name="ownedCurrency" component="select">
+              <option value="" disabled selected>
+                Select your option
+              </option>
               {currences.map((currency) => {
                 return (
                   <option key={currency.symbol} value={currency.symbol}>
-                    {currency.symbol}
+                    {currency.symbol} - {currency.name}
                   </option>
                 );
               })}
@@ -46,12 +53,15 @@ const CalculatorForm = React.memo(() => {
           <div>
             <label>Chcę walutę</label>
             <Field name="desiredCurrency" component="select">
+              <option value="" disabled selected>
+                Select your option
+              </option>
               {currences
                 .filter((item) => item.symbol !== values.ownedCurrency)
                 .map((currency) => {
                   return (
                     <option key={currency.symbol} value={currency.symbol}>
-                      {currency.symbol}
+                      {currency.symbol} - {currency.name}
                     </option>
                   );
                 })}
