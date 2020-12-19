@@ -1,10 +1,44 @@
+import { Button, MenuItem, Typography } from "@material-ui/core";
+import { Select, TextField } from "mui-rff";
 import React, { useState, useEffect } from "react";
-import { Form, Field } from "react-final-form";
+import { Form } from "react-final-form";
+import styled from "styled-components";
 
 interface Currences {
   symbol: string;
   name: string;
 }
+
+const StyledForm = styled.form`
+  width: 90%;
+  @media (min-width: 640px) {
+    width: 50%;
+  }
+`;
+
+const StyledAmountField = styled(TextField)`
+  @media (min-width: 640px) {
+    && {
+      max-width: 200px;
+      margin-left: 20px;
+    }
+  }
+`;
+
+const StyledButton = styled(Button)`
+  && {
+    margin-top: 1rem;
+    justify-self: end;
+  }
+`;
+
+const StyledWrapper = styled.div`
+  @media (min-width: 640px) {
+    display: flex;
+    align-items: center;
+    justify-items: between;
+  }
+`;
 
 const CalculatorForm = React.memo(() => {
   const [currences, setCurrences] = useState<Currences[]>([]);
@@ -31,46 +65,54 @@ const CalculatorForm = React.memo(() => {
   }, []);
 
   return (
-    <Form
-      onSubmit={onSubmit}
-      render={({ handleSubmit, form, values }) => (
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Mam walutę</label>
-            <Field name="ownedCurrency" component="select">
-              <option value="" disabled selected>
-                Select your option
-              </option>
-              {currences.map((currency) => {
-                return (
-                  <option key={currency.symbol} value={currency.symbol}>
-                    {currency.symbol} - {currency.name}
-                  </option>
-                );
-              })}
-            </Field>
-          </div>
-          <div>
-            <label>Chcę walutę</label>
-            <Field name="desiredCurrency" component="select">
-              <option value="" disabled selected>
-                Select your option
-              </option>
-              {currences
-                .filter((item) => item.symbol !== values.ownedCurrency)
-                .map((currency) => {
+    <>
+      <Typography variant="h4" align="center" component="h1" gutterBottom>
+        Currency converter
+      </Typography>
+      <Typography variant="h5" align="center" component="h2" gutterBottom>
+        Convert any currency
+      </Typography>
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit, values }) => (
+          <StyledForm onSubmit={handleSubmit}>
+            <StyledWrapper>
+              <Select name="fromCurrency" label="From currency..." formControlProps={{ margin: "normal" }}>
+                {currences.map((currency) => {
                   return (
-                    <option key={currency.symbol} value={currency.symbol}>
+                    <MenuItem key={currency.symbol} value={currency.symbol}>
                       {currency.symbol} - {currency.name}
-                    </option>
+                    </MenuItem>
                   );
                 })}
-            </Field>
-          </div>
-          <button>submit</button>
-        </form>
-      )}
-    />
+              </Select>
+              <StyledAmountField
+                label="Amount"
+                type="number"
+                name="amount"
+                variant="outlined"
+                color="primary"
+                required
+              />
+            </StyledWrapper>
+            <Select name="toCurrency" label="To currency...">
+              {currences
+                .filter((item) => item.symbol !== values.fromCurrency)
+                .map((currency) => {
+                  return (
+                    <MenuItem key={currency.symbol} value={currency.symbol}>
+                      {currency.symbol} - {currency.name}
+                    </MenuItem>
+                  );
+                })}
+            </Select>
+            <StyledButton variant="contained" color="primary" type="submit">
+              Submit
+            </StyledButton>
+          </StyledForm>
+        )}
+      />
+    </>
   );
 });
 
