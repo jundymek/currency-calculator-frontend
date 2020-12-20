@@ -4,13 +4,14 @@ import React, { useState, useEffect } from "react";
 import { Form } from "react-final-form";
 import styled from "styled-components";
 import CurrencesSelect from "./currencesSelect/CurrencesSelect";
+import Result from "./result/Result";
 
 export interface Currences {
   symbol: string;
   name: string;
 }
 
-interface Result {
+export interface ResultType {
   price: number;
   firstCurrency: string;
   secondCurrency: string;
@@ -21,15 +22,16 @@ interface Result {
 }
 
 const StyledForm = styled.form`
-  width: 90%;
-  @media (min-width: 640px) {
-    width: 50%;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const StyledAmountField = styled(TextField)`
-  @media (min-width: 640px) {
-    && {
+  && {
+    margin-top: 1rem;
+    @media (min-width: 640px) {
+      margin: 0;
       max-width: 200px;
       margin-left: 20px;
     }
@@ -39,21 +41,32 @@ const StyledAmountField = styled(TextField)`
 const StyledButton = styled(Button)`
   && {
     margin-top: 1rem;
-    justify-self: end;
+    align-self: flex-end;
+  }
+`;
+
+const StyledFormWrapper = styled.div`
+  @media (min-width: 640px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 
 const StyledWrapper = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   @media (min-width: 640px) {
-    display: flex;
-    align-items: center;
-    justify-items: between;
+    width: 50%;
   }
 `;
 
 const CalculatorForm = React.memo(() => {
   const [currences, setCurrences] = useState<Currences[]>([]);
-  const [result, setResult] = useState<Result | null>(null);
+  const [result, setResult] = useState<ResultType | null>(null);
   const onSubmit = (values: any) => {
     console.log(values);
     return fetch("http://localhost:3001/calc", {
@@ -92,7 +105,7 @@ const CalculatorForm = React.memo(() => {
   };
 
   return (
-    <>
+    <StyledWrapper>
       <Typography variant="h4" align="center" component="h1" gutterBottom>
         Currency converter
       </Typography>
@@ -103,7 +116,7 @@ const CalculatorForm = React.memo(() => {
         onSubmit={onSubmit}
         render={({ handleSubmit, values }) => (
           <StyledForm onSubmit={handleSubmit}>
-            <StyledWrapper>
+            <StyledFormWrapper>
               <CurrencesSelect currences={currences} name="firstCurrency" label="From currency..." />
               <StyledAmountField
                 label="Amount"
@@ -113,7 +126,7 @@ const CalculatorForm = React.memo(() => {
                 color="primary"
                 required
               />
-            </StyledWrapper>
+            </StyledFormWrapper>
             <CurrencesSelect
               currences={filteredCurrences(currences, values)}
               name="secondCurrency"
@@ -126,17 +139,8 @@ const CalculatorForm = React.memo(() => {
           </StyledForm>
         )}
       />
-      {result && (
-        <Paper variant="outlined" square>
-          <p>
-            1 {result.firstCurrency} = {result.price} {result.secondCurrency}
-          </p>
-          <p>
-            For {result.amount} {result.firstCurrency} you will receive {result.result} {result.secondCurrency}{" "}
-          </p>
-        </Paper>
-      )}
-    </>
+      {result && <Result result={result} />}
+    </StyledWrapper>
   );
 });
 

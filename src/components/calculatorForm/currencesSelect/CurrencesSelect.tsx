@@ -10,7 +10,7 @@ interface CurrencesSelectProps {
   disabled?: boolean;
 }
 
-const CurrencesSelect = React.memo<CurrencesSelectProps>(({ currences, name, label, disabled = false }) => {
+const CurrencesSelect = React.memo<CurrencesSelectProps>(({ currences, name, label, disabled }) => {
   return (
     <Select name={name} label={label} formControlProps={{ margin: "normal" }} disabled={disabled}>
       {currences.map((currency) => {
