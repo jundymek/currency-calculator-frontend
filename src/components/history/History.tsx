@@ -41,7 +41,6 @@ const History = React.memo(() => {
 
   const formattedDate = (date: Date): string => {
     const newDate = new Date(date);
-    console.log(newDate.getMonth());
     const day = newDate.getDate();
     const month = newDate.getMonth() + 1;
     const year = newDate.getFullYear();

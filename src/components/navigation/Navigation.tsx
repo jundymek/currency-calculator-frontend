@@ -20,8 +20,6 @@ const NavigationWrapper = styled(BottomNavigation)`
 const Navigation = React.memo<NavigationProps>(({ setRenderPage }) => {
   const [value, setValue] = React.useState(Page.Calc);
 
-  console.log(value);
-
   return (
     <NavigationWrapper
       value={value}

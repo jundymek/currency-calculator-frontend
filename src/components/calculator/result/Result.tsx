@@ -1,6 +1,6 @@
 import { Paper } from "@material-ui/core";
 import React from "react";
-import { ResultType } from "../CalculatorForm";
+import { ResultType } from "../Calculator";
 import styled from "styled-components";
 
 interface ResultProps {

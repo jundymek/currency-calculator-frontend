@@ -1,5 +1,5 @@
-import { Button, MenuItem, Typography, Paper } from "@material-ui/core";
-import { Select, TextField } from "mui-rff";
+import { Button, Typography } from "@material-ui/core";
+import { TextField } from "mui-rff";
 import React, { useState, useEffect } from "react";
 import { Form } from "react-final-form";
 import styled from "styled-components";
@@ -64,11 +64,10 @@ const StyledWrapper = styled.div`
   }
 `;
 
-const CalculatorForm = React.memo(() => {
+const Calculator = React.memo(() => {
   const [currences, setCurrences] = useState<Currences[]>([]);
   const [result, setResult] = useState<ResultType | null>(null);
   const onSubmit = (values: any) => {
-    console.log(values);
     return fetch("http://localhost:3001/calc", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,7 +75,6 @@ const CalculatorForm = React.memo(() => {
     })
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         setResult(result);
       })
       .catch((error) => console.log("error", error));
@@ -144,4 +142,4 @@ const CalculatorForm = React.memo(() => {
   );
 });
 
-export default CalculatorForm;
+export default Calculator;

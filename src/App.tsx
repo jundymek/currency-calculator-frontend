@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import CalculatorForm from "./components/calculatorForm/CalculatorForm";
+import Calculator from "./components/calculator/Calculator";
 import styled from "styled-components";
 import History from "./components/history/History";
 import Navigation from "./components/navigation/Navigation";
@@ -24,7 +24,7 @@ function App() {
   return (
     <Wrapper>
       <Navigation setRenderPage={setRenderPage} />
-      {renderPage === Page.Calc ? <CalculatorForm /> : <History />}
+      {renderPage === Page.Calc ? <Calculator /> : <History />}
     </Wrapper>
   );
 }
