@@ -2,10 +2,10 @@ import React from "react";
 import { Form } from "react-final-form";
 import { Button } from "@material-ui/core";
 import { TextField } from "mui-rff";
-import CurrencesSelect from "../currencesSelect/CurrencesSelect";
-import { filterCurrences } from "../utils/filterCurrences";
+import CurrenciesSelect from "./currencesSelect/CurrenciesSelect";
+import { filterCurrencies } from "../utils/filterCurrencies";
 import styled from "styled-components";
-import { Currences, ResultType } from "../Calculator";
+import { Currencies, ResultType } from "../Calculator";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -40,11 +40,11 @@ const StyledFormWrapper = styled.div`
 `;
 
 interface CalculatorFormProps {
-  currences: Currences[];
+  Currencies: Currencies[];
   setResult: React.Dispatch<React.SetStateAction<ResultType | null>>;
 }
 
-const CalculatorForm = React.memo<CalculatorFormProps>(({ currences, setResult }) => {
+const CalculatorForm = React.memo<CalculatorFormProps>(({ Currencies, setResult }) => {
   const onSubmit = (values: any) => {
     return fetch("http://localhost:3001/calc", {
       method: "POST",
@@ -64,11 +64,11 @@ const CalculatorForm = React.memo<CalculatorFormProps>(({ currences, setResult }
       render={({ handleSubmit, values }) => (
         <StyledForm onSubmit={handleSubmit}>
           <StyledFormWrapper>
-            <CurrencesSelect currences={currences} name="firstCurrency" label="From currency..." />
+            <CurrenciesSelect Currencies={Currencies} name="firstCurrency" label="From currency..." />
             <StyledAmountField label="Amount" type="number" name="amount" variant="outlined" color="primary" required />
           </StyledFormWrapper>
-          <CurrencesSelect
-            currences={filterCurrences(currences, values)}
+          <CurrenciesSelect
+            Currencies={filterCurrencies(Currencies, values)}
             name="secondCurrency"
             label="To currency..."
             disabled={!values.firstCurrency}
