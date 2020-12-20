@@ -1,7 +1,7 @@
-import { Currencies } from "../Calculator";
+import { Currency } from "../Calculator";
 
-export const filterCurrencies = (Currencies: Currencies[], values: Record<string, any>) => {
-  return Currencies.filter((item) => {
+export const filterCurrencies = (currencies: Currency[], values: Record<string, any>) => {
+  return currencies.filter((item) => {
     return item.symbol !== values.firstCurrency;
   });
 };

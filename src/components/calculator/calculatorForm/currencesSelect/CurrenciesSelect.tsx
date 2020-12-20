@@ -1,19 +1,19 @@
 import React from "react";
 import { Select } from "mui-rff";
-import { Currencies } from "../../Calculator";
+import { Currency } from "../../Calculator";
 import { MenuItem } from "@material-ui/core";
 
 interface CurrenciesSelectProps {
-  Currencies: Currencies[];
+  currencies: Currency[];
   name: string;
   label: string;
   disabled?: boolean;
 }
 
-const CurrenciesSelect = React.memo<CurrenciesSelectProps>(({ Currencies, name, label, disabled }) => {
+const CurrenciesSelect = React.memo<CurrenciesSelectProps>(({ currencies, name, label, disabled }) => {
   return (
     <Select name={name} label={label} disabled={disabled}>
-      {Currencies.map((currency) => {
+      {currencies.map((currency: Currency) => {
         return (
           <MenuItem key={currency.symbol} value={currency.symbol}>
             {currency.symbol} - {currency.name}

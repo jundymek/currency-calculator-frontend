@@ -6,7 +6,7 @@ import CalculatorForm from "./calculatorForm/CalculatorForm";
 import Result from "./result/Result";
 import { getCurrencies } from "./utils/getCurrencies";
 
-export interface Currencies {
+export interface Currency {
   symbol: string;
   name: string;
 }
@@ -33,7 +33,7 @@ const StyledWrapper = styled.div`
 `;
 
 const Calculator = React.memo(() => {
-  const [Currencies, setCurrencies] = useState<Currencies[]>([]);
+  const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [result, setResult] = useState<ResultType | null>(null);
 
   useEffect(() => {
@@ -63,9 +63,9 @@ const Calculator = React.memo(() => {
       ];
       try {
         const data = await getCurrencies();
-        const filteredData = data.filter((item: Currencies) => acceptedCurrencies.includes(item.symbol));
+        const filteredData = data.filter((item: Currency) => acceptedCurrencies.includes(item.symbol));
         setCurrencies(
-          filteredData.sort((a: Currencies, b: Currencies) => {
+          filteredData.sort((a: Currency, b: Currency) => {
             return a.symbol > b.symbol ? 1 : b.symbol > a.symbol ? -1 : 0;
           })
         );
@@ -78,7 +78,7 @@ const Calculator = React.memo(() => {
 
   return (
     <StyledWrapper>
-      <CalculatorForm Currencies={Currencies} setResult={setResult} />
+      <CalculatorForm currencies={currencies} setResult={setResult} />
       {result && <Result result={result} />}
     </StyledWrapper>
   );
