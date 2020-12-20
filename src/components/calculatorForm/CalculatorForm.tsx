@@ -9,6 +9,16 @@ interface Currences {
   name: string;
 }
 
+interface Result {
+  price: number;
+  firstCurrency: string;
+  secondCurrency: string;
+  amount: string;
+  result: number;
+  date: string;
+  id: number;
+}
+
 const StyledForm = styled.form`
   width: 90%;
   @media (min-width: 640px) {
@@ -42,10 +52,17 @@ const StyledWrapper = styled.div`
 
 const CalculatorForm = React.memo(() => {
   const [currences, setCurrences] = useState<Currences[]>([]);
-
   const onSubmit = (values: any) => {
     console.log(values);
     console.log(currences);
+    return fetch("http://localhost:3001/calc", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    })
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
   };
 
   const getCurrences = () => {
@@ -77,7 +94,7 @@ const CalculatorForm = React.memo(() => {
         render={({ handleSubmit, values }) => (
           <StyledForm onSubmit={handleSubmit}>
             <StyledWrapper>
-              <Select name="fromCurrency" label="From currency..." formControlProps={{ margin: "normal" }}>
+              <Select name="firstCurrency" label="From currency..." formControlProps={{ margin: "normal" }}>
                 {currences.map((currency) => {
                   return (
                     <MenuItem key={currency.symbol} value={currency.symbol}>
@@ -95,7 +112,7 @@ const CalculatorForm = React.memo(() => {
                 required
               />
             </StyledWrapper>
-            <Select name="toCurrency" label="To currency...">
+            <Select name="secondCurrency" label="To currency...">
               {currences
                 .filter((item) => item.symbol !== values.fromCurrency)
                 .map((currency) => {
