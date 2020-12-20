@@ -1,7 +1,7 @@
 import React from "react";
 import { Select } from "mui-rff";
-import { MenuItem } from "@material-ui/core";
 import { Currences } from "../Calculator";
+import { MenuItem } from "@material-ui/core";
 
 interface CurrencesSelectProps {
   currences: Currences[];
