@@ -20,8 +20,9 @@ interface HistoryState {
 
 const Wrapper = styled.div`
   width: 90%;
-  /* margin-top: 300px; */
+  padding: 20px 0;
   @media (min-width: 640px) {
+    margin: 0;
     max-width: 800px;
   }
 `;

@@ -1,4 +1,4 @@
-import { Paper } from "@material-ui/core";
+import { Divider, Paper } from "@material-ui/core";
 import React from "react";
 import { ResultType } from "../Calculator";
 import styled from "styled-components";
@@ -25,6 +25,7 @@ const Result = React.memo<ResultProps>(({ result }) => {
       <p>
         1 {result.firstCurrency} = {result.price} {result.secondCurrency}
       </p>
+      <Divider light />
       <p>
         For {result.amount} {result.firstCurrency} you will receive {result.result} {result.secondCurrency}{" "}
       </p>

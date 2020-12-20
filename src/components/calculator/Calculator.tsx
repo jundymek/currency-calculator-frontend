@@ -1,4 +1,4 @@
-import { Button, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { TextField } from "mui-rff";
 import React, { useState, useEffect } from "react";
 import { Form } from "react-final-form";
@@ -104,12 +104,6 @@ const Calculator = React.memo(() => {
 
   return (
     <StyledWrapper>
-      <Typography variant="h4" align="center" component="h1" gutterBottom>
-        Currency converter
-      </Typography>
-      <Typography variant="h5" align="center" component="h2" gutterBottom>
-        Convert any currency
-      </Typography>
       <Form
         onSubmit={onSubmit}
         render={({ handleSubmit, values }) => (
