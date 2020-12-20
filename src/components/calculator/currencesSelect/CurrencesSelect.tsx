@@ -12,7 +12,7 @@ interface CurrencesSelectProps {
 
 const CurrencesSelect = React.memo<CurrencesSelectProps>(({ currences, name, label, disabled }) => {
   return (
-    <Select name={name} label={label} formControlProps={{ margin: "normal" }} disabled={disabled}>
+    <Select name={name} label={label} disabled={disabled}>
       {currences.map((currency) => {
         return (
           <MenuItem key={currency.symbol} value={currency.symbol}>

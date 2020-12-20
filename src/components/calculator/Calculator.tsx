@@ -38,10 +38,34 @@ const Calculator = React.memo(() => {
 
   useEffect(() => {
     async function fetchData() {
+      const acceptedCurrences = [
+        "EUR",
+        "USD",
+        "HUF",
+        "AUD",
+        "NZD",
+        "CNY",
+        "INR",
+        "SGD",
+        "BYR",
+        "CAD",
+        "JPY",
+        "KPW",
+        "THB",
+        "HRK",
+        "EGP",
+        "MXN",
+        "PLN",
+        "NOK",
+        "RUB",
+        "GBP",
+        "BTC",
+      ];
       try {
         const data = await getCurrences();
+        const filteredData = data.filter((item: Currences) => acceptedCurrences.includes(item.symbol));
         setCurrences(
-          data.sort((a: any, b: any) => {
+          filteredData.sort((a: Currences, b: Currences) => {
             return a.symbol > b.symbol ? 1 : b.symbol > a.symbol ? -1 : 0;
           })
         );
