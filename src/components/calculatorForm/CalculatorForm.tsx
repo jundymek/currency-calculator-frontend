@@ -1,10 +1,11 @@
-import { Button, MenuItem, Typography } from "@material-ui/core";
+import { Button, MenuItem, Typography, Paper } from "@material-ui/core";
 import { Select, TextField } from "mui-rff";
 import React, { useState, useEffect } from "react";
 import { Form } from "react-final-form";
 import styled from "styled-components";
+import CurrencesSelect from "./currencesSelect/CurrencesSelect";
 
-interface Currences {
+export interface Currences {
   symbol: string;
   name: string;
 }
@@ -55,7 +56,6 @@ const CalculatorForm = React.memo(() => {
   const [result, setResult] = useState<Result | null>(null);
   const onSubmit = (values: any) => {
     console.log(values);
-    console.log(currences);
     return fetch("http://localhost:3001/calc", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -85,6 +85,12 @@ const CalculatorForm = React.memo(() => {
     fetchData();
   }, []);
 
+  const filteredCurrences = (currences: Currences[], values: any) => {
+    return currences.filter((item) => {
+      return item.symbol !== values.firstCurrency;
+    });
+  };
+
   return (
     <>
       <Typography variant="h4" align="center" component="h1" gutterBottom>
@@ -98,15 +104,7 @@ const CalculatorForm = React.memo(() => {
         render={({ handleSubmit, values }) => (
           <StyledForm onSubmit={handleSubmit}>
             <StyledWrapper>
-              <Select name="firstCurrency" label="From currency..." formControlProps={{ margin: "normal" }}>
-                {currences.map((currency) => {
-                  return (
-                    <MenuItem key={currency.symbol} value={currency.symbol}>
-                      {currency.symbol} - {currency.name}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
+              <CurrencesSelect currences={currences} name="firstCurrency" label="From currency..." />
               <StyledAmountField
                 label="Amount"
                 type="number"
@@ -116,24 +114,28 @@ const CalculatorForm = React.memo(() => {
                 required
               />
             </StyledWrapper>
-            <Select name="secondCurrency" label="To currency...">
-              {currences
-                .filter((item) => item.symbol !== values.fromCurrency)
-                .map((currency) => {
-                  return (
-                    <MenuItem key={currency.symbol} value={currency.symbol}>
-                      {currency.symbol} - {currency.name}
-                    </MenuItem>
-                  );
-                })}
-            </Select>
+            <CurrencesSelect
+              currences={filteredCurrences(currences, values)}
+              name="secondCurrency"
+              label="To currency..."
+              disabled={!values.firstCurrency}
+            />
             <StyledButton variant="contained" color="primary" type="submit">
               Submit
             </StyledButton>
           </StyledForm>
         )}
       />
-      {result && <p>{result.price}</p>}
+      {result && (
+        <Paper variant="outlined" square>
+          <p>
+            1 {result.firstCurrency} = {result.price} {result.secondCurrency}
+          </p>
+          <p>
+            For {result.amount} {result.firstCurrency} you will receive {result.result} {result.secondCurrency}{" "}
+          </p>
+        </Paper>
+      )}
     </>
   );
 });
