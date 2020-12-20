@@ -52,6 +52,7 @@ const StyledWrapper = styled.div`
 
 const CalculatorForm = React.memo(() => {
   const [currences, setCurrences] = useState<Currences[]>([]);
+  const [result, setResult] = useState<Result | null>(null);
   const onSubmit = (values: any) => {
     console.log(values);
     console.log(currences);
@@ -61,7 +62,10 @@ const CalculatorForm = React.memo(() => {
       body: JSON.stringify(values),
     })
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => {
+        console.log(result);
+        setResult(result);
+      })
       .catch((error) => console.log("error", error));
   };
 
@@ -129,6 +133,7 @@ const CalculatorForm = React.memo(() => {
           </StyledForm>
         )}
       />
+      {result && <p>{result.price}</p>}
     </>
   );
 });
