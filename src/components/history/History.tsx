@@ -26,13 +26,30 @@ const Wrapper = styled.div`
   }
 `;
 
+const StyledTableCell = styled(TableCell)`
+  && {
+    background-color: black;
+    color: white;
+  }
+`;
+
 const History = React.memo(() => {
   const [history, setHistory] = useState<HistoryState[] | null>(null);
   const getHistory = () => {
     return fetch("http://localhost:3001/calc").then((res) => res.json());
   };
 
-  console.log(history);
+  const formattedDate = (date: Date): string => {
+    const newDate = new Date(date);
+    console.log(newDate.getMonth());
+    const day = newDate.getDate();
+    const month = newDate.getMonth() + 1;
+    const year = newDate.getFullYear();
+    const hour = newDate.getHours();
+    const minutes = newDate.getMinutes();
+    const seconds = newDate.getSeconds();
+    return `${day}/${month}/${year} - ${hour}:${minutes}:${seconds}`;
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -49,12 +66,12 @@ const History = React.memo(() => {
             <Table size="small" aria-label="a dense table">
               <TableHead>
                 <TableRow>
-                  <TableCell>id</TableCell>
-                  <TableCell align="right">date</TableCell>
-                  <TableCell align="right">From</TableCell>
-                  <TableCell align="right">To</TableCell>
-                  <TableCell align="right">Amount</TableCell>
-                  <TableCell align="right">Price</TableCell>
+                  <StyledTableCell>id</StyledTableCell>
+                  <StyledTableCell align="right">date</StyledTableCell>
+                  <StyledTableCell align="right">From</StyledTableCell>
+                  <StyledTableCell align="right">To</StyledTableCell>
+                  <StyledTableCell align="right">Amount</StyledTableCell>
+                  <StyledTableCell align="right">Price</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -63,7 +80,7 @@ const History = React.memo(() => {
                     <TableCell component="th" scope="row">
                       {item.id}
                     </TableCell>
-                    <TableCell align="right">{item.date}</TableCell>
+                    <TableCell align="right">{formattedDate(item.date)}</TableCell>
                     <TableCell align="right">{item.firstCurrency}</TableCell>
                     <TableCell align="right">{item.secondCurrency}</TableCell>
                     <TableCell align="right">{item.amount}</TableCell>
