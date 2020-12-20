@@ -12,7 +12,7 @@ const History = React.memo(() => {
     }
     fetchData();
   }, []);
-  return <div></div>;
+  return <div>Histoty</div>;
 });
 
 export default History;

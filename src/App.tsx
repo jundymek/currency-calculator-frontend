@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import CalculatorForm from "./components/calculatorForm/CalculatorForm";
 import styled from "styled-components";
-import History from "./components/calculatorForm/history/History";
+import History from "./components/history/History";
+import Navigation from "./components/navigation/Navigation";
 
 const Wrapper = styled.div`
   display: flex;
@@ -13,11 +14,17 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
+export enum Page {
+  Calc = "CALC",
+  History = "HISTORY",
+}
+
 function App() {
+  const [renderPage, setRenderPage] = useState<Page>(Page.Calc);
   return (
     <Wrapper>
-      <CalculatorForm />
-      <History />
+      <Navigation setRenderPage={setRenderPage} />
+      {renderPage === Page.Calc ? <CalculatorForm /> : <History />}
     </Wrapper>
   );
 }
