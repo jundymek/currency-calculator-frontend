@@ -37,7 +37,11 @@ const StyledTableCell = styled(TableCell)`
 const History = React.memo(() => {
   const [history, setHistory] = useState<HistoryState[] | null>(null);
   const getHistory = () => {
-    return fetch("http://localhost:3001/calc").then((res) => res.json());
+    try {
+      return fetch("http://localhost:3001/calc").then((res) => res.json());
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const formattedDate = (date: Date): string => {
@@ -60,7 +64,7 @@ const History = React.memo(() => {
   }, []);
   return (
     <>
-      {history ? (
+      {history?.length ? (
         <Wrapper>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
