@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form } from "react-final-form";
 import { Button } from "@material-ui/core";
 import { TextField } from "mui-rff";
@@ -39,23 +39,49 @@ const StyledFormWrapper = styled.div`
   }
 `;
 
+const StyledButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StyledError = styled.p`
+  color: #f50057;
+`;
+
 interface CalculatorFormProps {
   currencies: Currency[];
   setResult: React.Dispatch<React.SetStateAction<ResultType | null>>;
 }
 
+interface FormValues {
+  firstCurrency: string;
+  secondCurrency: string;
+  amount: number;
+}
+
 const CalculatorForm = React.memo<CalculatorFormProps>(({ currencies, setResult }) => {
-  const onSubmit = (values: any) => {
-    return fetch("http://localhost:3001/calc", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setResult(result);
+  const [error, setError] = useState("");
+  const validate = (values: FormValues) => {
+    if (!values.firstCurrency || !values.secondCurrency) {
+      setError("You must select both currencies");
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const onSubmit = (values: FormValues) => {
+    if (validate(values)) {
+      return fetch("http://localhost:3001/calc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       })
-      .catch((error) => console.log("error", error));
+        .then((response) => response.json())
+        .then((result) => {
+          setResult(result);
+        })
+        .catch((error) => console.log("error", error));
+    }
   };
 
   return (
@@ -73,9 +99,12 @@ const CalculatorForm = React.memo<CalculatorFormProps>(({ currencies, setResult 
             label="To currency..."
             disabled={!values.firstCurrency}
           />
-          <StyledButton variant="contained" color="primary" type="submit">
-            Submit
-          </StyledButton>
+          <StyledButtonWrapper>
+            <StyledError>{error && `${error}*`}</StyledError>
+            <StyledButton variant="contained" color="primary" type="submit">
+              Submit
+            </StyledButton>
+          </StyledButtonWrapper>
         </StyledForm>
       )}
     />
