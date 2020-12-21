@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Form } from "react-final-form";
 import { Button } from "@material-ui/core";
-import { TextField } from "mui-rff";
 import CurrenciesSelect from "./currencesSelect/CurrenciesSelect";
 import { filterCurrencies } from "../utils/filterCurrencies";
 import styled from "styled-components";
 import { Currency, ResultType } from "../Calculator";
+import { TextField } from "mui-rff";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -27,7 +27,7 @@ const StyledAmountField = styled(TextField)`
 const StyledButton = styled(Button)`
   && {
     margin-top: 1rem;
-    align-self: flex-end;
+    align-self: flex-start;
   }
 `;
 
@@ -41,10 +41,13 @@ const StyledFormWrapper = styled.div`
 
 const StyledButtonWrapper = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
 `;
 
 const StyledError = styled.p`
+  margin: 0;
+  font-size: 14px;
   color: #f50057;
 `;
 
@@ -60,16 +63,26 @@ interface FormValues {
 }
 
 const CalculatorForm = React.memo<CalculatorFormProps>(({ currencies, setResult }) => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string[]>([]);
+
   const validate = (values: FormValues) => {
+    const error = [];
     if (!values.firstCurrency || !values.secondCurrency) {
-      setError("You must select both currencies");
+      error.push("You must select both currencies");
+    }
+    if (values.amount < 1) {
+      error.push("You must set amount to at least 1");
+    }
+    if (error.length > 0) {
+      setError(error);
       return false;
     } else {
       return true;
     }
   };
+
   const onSubmit = (values: FormValues) => {
+    setError([]);
     if (validate(values)) {
       return fetch("http://localhost:3001/calc", {
         method: "POST",
@@ -100,7 +113,8 @@ const CalculatorForm = React.memo<CalculatorFormProps>(({ currencies, setResult 
             disabled={!values.firstCurrency}
           />
           <StyledButtonWrapper>
-            <StyledError>{error && `${error}*`}</StyledError>
+            <div>{error.length > 0 && error.map((item: string) => <StyledError>{`${item}*`}</StyledError>)}</div>
+
             <StyledButton variant="contained" color="primary" type="submit">
               Submit
             </StyledButton>
