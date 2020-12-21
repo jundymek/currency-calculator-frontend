@@ -11,6 +11,10 @@ const StyledForm = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin-top: 2rem;
+  @media (min-width: 640px) {
+    margin: 0;
+  }
 `;
 
 const StyledAmountField = styled(TextField)`
@@ -47,8 +51,13 @@ const StyledButtonWrapper = styled.div`
 
 const StyledError = styled.p`
   margin: 0;
+  padding: 2px;
   font-size: 14px;
   color: #f50057;
+`;
+
+const StyledErrorWrapper = styled.div`
+  margin-top: 1rem;
 `;
 
 interface CalculatorFormProps {
@@ -113,8 +122,9 @@ const CalculatorForm = React.memo<CalculatorFormProps>(({ currencies, setResult 
             disabled={!values.firstCurrency}
           />
           <StyledButtonWrapper>
-            <div>{error.length > 0 && error.map((item: string) => <StyledError>{`${item}*`}</StyledError>)}</div>
-
+            <StyledErrorWrapper>
+              {error.length > 0 && error.map((item: string) => <StyledError>{`${item}*`}</StyledError>)}
+            </StyledErrorWrapper>
             <StyledButton variant="contained" color="primary" type="submit">
               Submit
             </StyledButton>

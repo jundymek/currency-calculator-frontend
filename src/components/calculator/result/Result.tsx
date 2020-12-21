@@ -10,6 +10,7 @@ interface ResultProps {
 const StyledPaper = styled(Paper)`
   && {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     width: 90%;
     @media (min-width: 640px) {
