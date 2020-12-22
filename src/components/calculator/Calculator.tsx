@@ -35,6 +35,7 @@ const StyledWrapper = styled.div`
 const Calculator = React.memo(() => {
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [result, setResult] = useState<ResultType | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -70,7 +71,7 @@ const Calculator = React.memo(() => {
           })
         );
       } catch (error) {
-        console.log(error);
+        setError(error.message);
       }
     }
     fetchData();
@@ -78,8 +79,14 @@ const Calculator = React.memo(() => {
 
   return (
     <StyledWrapper>
-      <CalculatorForm currencies={currencies} setResult={setResult} />
-      {result && <Result result={result} />}
+      {error ? (
+        <p>{error}</p>
+      ) : (
+        <>
+          <CalculatorForm currencies={currencies} setResult={setResult} />
+          {result && <Result result={result} />}
+        </>
+      )}
     </StyledWrapper>
   );
 });
