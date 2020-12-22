@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
+import Spinner from "../spinner/Spinner";
 import CalculatorForm from "./calculatorForm/CalculatorForm";
 
 import Result from "./result/Result";
@@ -36,6 +37,7 @@ const Calculator = React.memo(() => {
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [result, setResult] = useState<ResultType | null>(null);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -63,6 +65,7 @@ const Calculator = React.memo(() => {
         "BTC",
       ];
       try {
+        setIsLoading(true);
         const data = await getCurrencies();
         const filteredData = data.filter((item: Currency) => acceptedCurrencies.includes(item.symbol));
         setCurrencies(
@@ -70,23 +73,28 @@ const Calculator = React.memo(() => {
             return a.symbol > b.symbol ? 1 : b.symbol > a.symbol ? -1 : 0;
           })
         );
+        setIsLoading(false);
       } catch (error) {
         setError(error.message);
+        setIsLoading(false);
       }
     }
     fetchData();
   }, []);
 
+  const renderCalculator = !error && !isLoading;
+  const renderError = error && !isLoading;
+
   return (
     <StyledWrapper>
-      {error ? (
-        <p>{error}</p>
-      ) : (
+      {renderCalculator && (
         <>
           <CalculatorForm currencies={currencies} setResult={setResult} />
           {result && <Result result={result} />}
         </>
       )}
+      {renderError && <p>{error}</p>}
+      {isLoading && <Spinner />}
     </StyledWrapper>
   );
 });
