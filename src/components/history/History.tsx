@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
+import Spinner from "../spinner/Spinner";
 
 interface HistoryState {
   id: number;
@@ -36,11 +37,13 @@ const StyledTableCell = styled(TableCell)`
 
 const History = React.memo(() => {
   const [history, setHistory] = useState<HistoryState[] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const getHistory = () => {
     try {
       return fetch("http://localhost:3001/calc").then((res) => res.json());
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -57,49 +60,56 @@ const History = React.memo(() => {
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const data = await getHistory();
       setHistory(data);
+      setIsLoading(false);
     }
     fetchData();
   }, []);
-  return (
-    <>
-      {history?.length ? (
-        <Wrapper>
-          <TableContainer component={Paper}>
-            <Table size="small" aria-label="a dense table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>id</StyledTableCell>
-                  <StyledTableCell align="right">date</StyledTableCell>
-                  <StyledTableCell align="right">From</StyledTableCell>
-                  <StyledTableCell align="right">To</StyledTableCell>
-                  <StyledTableCell align="right">Amount</StyledTableCell>
-                  <StyledTableCell align="right">Price</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {history.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell component="th" scope="row">
-                      {item.id}
-                    </TableCell>
-                    <TableCell align="right">{formattedDate(item.date)}</TableCell>
-                    <TableCell align="right">{item.firstCurrency}</TableCell>
-                    <TableCell align="right">{item.secondCurrency}</TableCell>
-                    <TableCell align="right">{item.amount}</TableCell>
-                    <TableCell align="right">{item.price}</TableCell>
+
+  if (isLoading) {
+    return <Spinner />;
+  } else {
+    return (
+      <>
+        {history?.length ? (
+          <Wrapper>
+            <TableContainer component={Paper}>
+              <Table size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>id</StyledTableCell>
+                    <StyledTableCell align="right">date</StyledTableCell>
+                    <StyledTableCell align="right">From</StyledTableCell>
+                    <StyledTableCell align="right">To</StyledTableCell>
+                    <StyledTableCell align="right">Amount</StyledTableCell>
+                    <StyledTableCell align="right">Price</StyledTableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Wrapper>
-      ) : (
-        "No data"
-      )}
-    </>
-  );
+                </TableHead>
+                <TableBody>
+                  {history.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell component="th" scope="row">
+                        {item.id}
+                      </TableCell>
+                      <TableCell align="right">{formattedDate(item.date)}</TableCell>
+                      <TableCell align="right">{item.firstCurrency}</TableCell>
+                      <TableCell align="right">{item.secondCurrency}</TableCell>
+                      <TableCell align="right">{item.amount}</TableCell>
+                      <TableCell align="right">{item.price}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Wrapper>
+        ) : (
+          "No data"
+        )}
+      </>
+    );
+  }
 });
 
 export default History;

@@ -82,21 +82,21 @@ const Calculator = React.memo(() => {
     fetchData();
   }, []);
 
-  const renderCalculator = !error && !isLoading;
-  const renderError = error && !isLoading;
-
-  return (
-    <StyledWrapper>
-      {renderCalculator && (
-        <>
-          <CalculatorForm currencies={currencies} setResult={setResult} />
-          {result && <Result result={result} />}
-        </>
-      )}
-      {renderError && <p>{error}</p>}
-      {isLoading && <Spinner />}
-    </StyledWrapper>
-  );
+  if (isLoading) {
+    return <Spinner />;
+  } else {
+    return (
+      <StyledWrapper>
+        {!error && (
+          <>
+            <CalculatorForm currencies={currencies} setResult={setResult} />
+            {result && <Result result={result} />}
+          </>
+        )}
+        <p>{error}</p>
+      </StyledWrapper>
+    );
+  }
 });
 
 export default Calculator;
