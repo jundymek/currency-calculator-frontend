@@ -24,11 +24,11 @@ const Result = React.memo<ResultProps>(({ result }) => {
   return (
     <StyledPaper variant="outlined" square>
       <p>
-        1 {result.firstCurrency} = {result.price} {result.secondCurrency}
+        1 {result.firstCurrency} = {result.price.toFixed(2)} {result.secondCurrency}
       </p>
       <Divider light />
       <p>
-        For {result.amount} {result.firstCurrency} you will receive {result.result} {result.secondCurrency}{" "}
+        For {result.amount} {result.firstCurrency} you will receive {result.result.toFixed(2)} {result.secondCurrency}{" "}
       </p>
     </StyledPaper>
   );
